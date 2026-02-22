@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
-using System.Runtime.Versioning;
 
 namespace HealthcareCredentialTracker.Controllers;
 
