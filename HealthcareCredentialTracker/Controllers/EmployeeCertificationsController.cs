@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
+using HealthcareCredentialTracker.Services;
+
 
 namespace HealthcareCredentialTracker.Controllers;
 
@@ -10,9 +12,13 @@ namespace HealthcareCredentialTracker.Controllers;
 public class EmployeeCertificationController : ControllerBase
 {
     private readonly HealthcareContext _context;
-    public EmployeeCertificationController(HealthcareContext context)
+    private readonly ICertificationService _certService;
+    
+    public EmployeeCertificationController(HealthcareContext context, ICertificationService certService)
     {
         _context = context;
+        _certService = certService;
+
     }
 
     // GET: api/EmployeeCertifications
@@ -26,6 +32,9 @@ public class EmployeeCertificationController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<EmployeeCertification>> PostEmployeeCertification(EmployeeCertification employeeCertification)
     {
+        // Run cert check service
+        _certService.UpdateStatus(employeeCertification);
+
         // Add link to the db
         _context.EmployeeCertifications.Add(employeeCertification);
 

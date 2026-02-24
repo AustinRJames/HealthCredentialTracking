@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
+using HealthcareCredentialTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddDbContext<HealthcareContext>(options =>
 // builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICertificationService, CertificationService>(); // Link interface to class
+
 
 // Build app
 var app = builder.Build();
