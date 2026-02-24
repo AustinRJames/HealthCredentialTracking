@@ -1,11 +1,30 @@
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions (options =>
+    {
+        // Output Enums ass text
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+        // Grab names when getting EmployeeCerts but avoid infinite loops
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // Trust local angular 
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddDbContext<HealthcareContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -30,6 +49,8 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 // app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 

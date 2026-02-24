@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
 using HealthcareCredentialTracker.Services;
+using System.Security.Cryptography;
 
 
 namespace HealthcareCredentialTracker.Controllers;
@@ -25,7 +26,10 @@ public class EmployeeCertificationController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<EmployeeCertification>>> GetEmployeeCertifications()
     {
-        return await _context.EmployeeCertifications.ToListAsync();
+        return await _context.EmployeeCertifications
+            .Include(ec => ec.Employee) // JOIN employee table
+            .Include(ec => ec.Certification) // JOIN cert table
+            .ToListAsync();
     }
 
     // POST: api/EmployeeCertifications
