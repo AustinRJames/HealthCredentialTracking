@@ -40,4 +40,20 @@ export class Api {
   getEmployeeCertifications() : Observable<EmployeeCertification[]> {
     return this.http.get<EmployeeCertification[]>(`${this.baseUrl}/EmployeeCertification`);
   }
+
+  // Get all employees for drop down
+  getEmployees() : Observable<Employee[]> {
+    return this.http.get<Employee[]>(`${this.baseUrl}/Employees`);
+  }
+
+  // Get all certifications
+  getCertifications() : Observable<Certification[]> {
+    return this.http.get<Certification[]>(`${this.baseUrl}/Certifications`);
+  }
+
+  // Post new assignment to the database
+  assignCertifications(payload : any) : Observable<any> {
+    return this.http.post(`${this.baseUrl}/EmployeeCertification`, payload);
+  }
+
 }
