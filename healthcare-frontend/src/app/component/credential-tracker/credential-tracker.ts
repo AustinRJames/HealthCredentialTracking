@@ -26,6 +26,24 @@ export class CredentialTrackerComponent implements OnInit {
     dateCompleted: ''
   };
 
+  // Data for new employee
+  newEmployee = {
+    firstName: '',
+    lastName: '',
+    role: '',
+    department: '',
+    email: ''
+  };
+
+  // Data for new cert
+  newCert = {
+    name: '',
+    issuingAuthority: '',
+    renewalPeriodInMonths: 12
+  };
+
+
+
   // Inject the service 
   constructor(private api : Api) {}
 
@@ -36,7 +54,14 @@ export class CredentialTrackerComponent implements OnInit {
 
   loadData(): void {
     // Load main table
-    this.api.getEmployeeCertifications().subscribe(data => this.certifications = data);
+    this.api.getEmployeeCertifications().subscribe({
+      next: (data) => {
+        this.certifications = data;
+        console.log('TABLE DATA ARRIVED:', data);
+      },
+      error: (err) => console.error('TABLE FETCH ERROR:', err)
+    });
+    // this.api.getEmployeeCertifications().subscribe(data => this.certifications = data);
     // Load dropdown list
     this.api.getEmployees().subscribe(data => this.employeeList = data);
     this.api.getCertifications().subscribe(data => this.certList = data);
@@ -65,6 +90,32 @@ export class CredentialTrackerComponent implements OnInit {
         console.error('Error saving', err);
         alert('Something went wrong. Check the console');
       }
+    });
+  }
+
+  onSubmitEmployee(): void {
+    this.api.createEmployee(this.newEmployee).subscribe({
+      next: () => {
+        alert("Employee Created!");
+        // Reload lists
+        this.api.getEmployees().subscribe(data => this.employeeList = data);
+        // Clear form
+        this.newEmployee = { firstName: '', lastName: '', role: '', department: '', email: '' };
+      },
+      error: (err) => console.error('Error creating employee!', err)
+    });
+  }
+
+  onSubmitCertification(): void {
+    this.api.createCertifications(this.newCert).subscribe({
+      next: () => {
+        alert("Certification Created!");
+        // Reload lists
+        this.api.getCertifications().subscribe(data => this.certList = data);
+        // Clear from
+        this.newCert = { name: '', issuingAuthority: '', renewalPeriodInMonths: 12 };
+      },
+      error: (err) => console.error('Error creating certification', err)
     });
   }
 }

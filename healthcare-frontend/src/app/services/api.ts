@@ -56,4 +56,14 @@ export class Api {
     return this.http.post(`${this.baseUrl}/EmployeeCertification`, payload);
   }
 
+  // Post new employee to database
+  createEmployee(payload : any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Employees`, payload);
+  }
+
+  // Post new certification to database
+  createCertifications(payload : any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Certifications`, payload);
+  }
+
 }
