@@ -70,4 +70,9 @@ export class Api {
     return this.http.post(`${this.baseUrl}/Certifications`, payload);
   }
 
+  // Delete employee based on ID
+  deleteEmployee(id : number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/Employees/${id}`)
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, signal } from '@angular/core'
 import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { Api, Certification, Employee, EmployeeCertification } from '../../services/api'
@@ -12,12 +12,10 @@ import { Api, Certification, Employee, EmployeeCertification } from '../../servi
 })
 
 export class CredentialTrackerComponent implements OnInit {
-  // Holds data from backend
-  certifications: EmployeeCertification[] = [];
 
-  // Variables for drop downs
-  employeeList: Employee[] = [];
-  certList: Certification[] = [];
+  certifications = signal<EmployeeCertification[]>([]);
+  employeeList = signal<Employee[]>([]);
+  certList = signal<Certification[]>([]);
 
   // This object holds info for dropdowns
   newAssignment = {
@@ -52,26 +50,10 @@ export class CredentialTrackerComponent implements OnInit {
     this.loadData();
   }
 
-  loadData(): void {
-    // Load main table
-    this.api.getEmployeeCertifications().subscribe({
-      next: (data) => {
-        this.certifications = data;
-        console.log('TABLE DATA ARRIVED:', data);
-      },
-      error: (err) => console.error('TABLE FETCH ERROR:', err)
-    });
-    // this.api.getEmployeeCertifications().subscribe(data => this.certifications = data);
-    // Load dropdown list
-    this.api.getEmployees().subscribe(data => this.employeeList = data);
-    // this.api.getCertifications().subscribe(data => this.certList = data);
-    this.api.getCertifications().subscribe({
-      next: (data) => {
-        this.certList = data;
-        console.log('CERT DATA ARRIVED:', data);
-      },
-      error: (err) => console.error('TABLE FETCH ERROR:', err)
-    });
+loadData(): void {
+    this.api.getEmployeeCertifications().subscribe(data => this.certifications.set(data));
+    this.api.getEmployees().subscribe(data => this.employeeList.set(data));
+    this.api.getCertifications().subscribe(data => this.certList.set(data));
   }
 
   onSubmit(): void {
@@ -87,7 +69,6 @@ export class CredentialTrackerComponent implements OnInit {
     // Send it to backend
     this.api.assignCertifications(payload).subscribe({
       next: () => {
-        alert('Success! Certification assigned.');
         this.loadData(); // Refresh table
 
         // Clear the form
@@ -103,11 +84,11 @@ export class CredentialTrackerComponent implements OnInit {
   onSubmitEmployee(): void {
     this.api.createEmployee(this.newEmployee).subscribe({
       next: () => {
-        alert("Employee Created!");
         // Reload lists
-        this.api.getEmployees().subscribe(data => this.employeeList = data);
+        this.api.getEmployees().subscribe(data => this.employeeList.set(data));
         // Clear form
         this.newEmployee = { firstName: '', lastName: '', role: '', department: '', email: '' };
+
       },
       error: (err) => console.error('Error creating employee!', err)
     });
@@ -118,11 +99,35 @@ export class CredentialTrackerComponent implements OnInit {
       next: () => {
         alert("Certification Created!");
         // Reload lists
-        this.api.getCertifications().subscribe(data => this.certList = data);
+        this.api.getCertifications().subscribe(data => this.certList.set(data));
+
         // Clear from
         this.newCert = { name: '', issuingAuthority: '', validityPeriodMonth: 12 };
+        
       },
       error: (err) => console.error('Error creating certification', err)
     });
+  }
+
+  onDeleteEmployee(id: number): void {
+    // Confirm they want to delete
+    const isConfirmed = confirm('Are you sure you want to delete this employee? This will also delete their assigned certifications.');  
+
+    if (isConfirmed) {
+      // Send delete request
+      this.api.deleteEmployee(id).subscribe({
+        next: () => {
+          this.employeeList.update(currentList => currentList.filter(emp => emp.id !== id));
+                    // Refresh the table
+          // this.employeeList = this.employeeList.filter(emp => emp.id !== id);
+          this.api.getEmployeeCertifications().subscribe(data => this.certifications.set(data));
+
+        },
+        error: (err) => {
+          console.error('Error deleting employee:', err);
+          alert('Could not delete. Check console.')
+        }
+      });
+    }
   }
 }
