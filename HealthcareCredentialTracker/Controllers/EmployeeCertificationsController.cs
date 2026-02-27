@@ -57,4 +57,22 @@ public class EmployeeCertificationController : ControllerBase
         // Use OK because the composite keys make automatic url tricky
         return Ok(employeeCertification);
     } 
+
+    // Delete: api/EmployeeCertifications/empId/certId
+    [HttpDelete("{employeeId}/{certificationId}")]
+    public async Task<IActionResult> RevokeCertification(int employeeId, int certificationId)
+    {
+        // Look for exact combination of Employee + Cert
+        var employeeCert = await _context.EmployeeCertifications.FirstOrDefaultAsync(ec => ec.EmployeeId == employeeId && ec.CertificationId == certificationId);
+
+        if (employeeCert == null)
+        {
+            return NotFound();
+        }
+
+        _context.EmployeeCertifications.Remove(employeeCert);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

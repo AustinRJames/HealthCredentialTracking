@@ -80,4 +80,8 @@ export class Api {
     return this.http.delete(`${this.baseUrl}/Certifications/${id}`);
   }
 
+  revokeCertification(employeeId : number, certId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/EmployeeCertification/${employeeId}/${certId}`);
+  }
+
 }

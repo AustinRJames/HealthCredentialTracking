@@ -39,7 +39,7 @@ public class CertificationsController : ControllerBase
 
     // Delete: api/certifications//id
     [HttpDelete("{id}")]
-    public async Task<ActionResult<Certification>> DeleteCertification(int id)
+    public async Task<IActionResult> DeleteCertification(int id)
     {
         var certification = await _context.Certifications.FindAsync(id);
 

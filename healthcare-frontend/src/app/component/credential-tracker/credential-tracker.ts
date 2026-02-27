@@ -165,4 +165,22 @@ loadData(): void {
       })
     }
   }
+
+  onRevoke(employeeId: number, certId: number): void {
+    const isConfirmed = confirm('Are you sure you want to revoke this certification?')
+
+    if (isConfirmed) {
+      this.api.revokeCertification(employeeId, certId).subscribe({
+        next: () => {
+            this.certifications.update(currentList => 
+              currentList.filter(c => !(c.employeeId === employeeId && c.certificationId === certId))
+          );        
+        },
+        error: (err) => {
+          console.error('Error Revoking cert:', err);
+          alert('Could not revoke. Check Console.');
+        }
+      });
+    }
+  }
 }
