@@ -57,26 +57,43 @@ loadData(): void {
   }
 
   onSubmit(): void {
+    const certId = Number(this.newAssignment.certificationId); // Get ID
+    const selectedCert = this.certList().find(c => c.id == certId); // Get specific cert
+
+    if (!selectedCert) {
+      alert('Please select valid cert!');
+      return;
+    }
+
+    // Date math
+    const completedDate = new Date(this.newAssignment.dateCompleted);
+    const expirationDate = new Date(completedDate);
+
+    expirationDate.setMonth(expirationDate.getMonth() + selectedCert.validityPeriodMonth);
+
+
     // Construct payload send and some dummy data. Backend will overwrite it
     const payload = {
       employeeId: Number(this.newAssignment.employeeId),
       certificationId: Number(this.newAssignment.certificationId),
-      dateCompleted: this.newAssignment.dateCompleted,
-      expirationDate: new Date().toISOString(),
+      dateCompleted: completedDate.toISOString(),
+      expirationDate: expirationDate.toISOString(),
       status: 0
     };
 
     // Send it to backend
     this.api.assignCertifications(payload).subscribe({
       next: () => {
-        this.loadData(); // Refresh table
-
+        alert('Success! Certification Assigned.');
+        // Refresh the main table signal to show the new assignment
+        this.api.getEmployeeCertifications().subscribe(data => this.certifications.set(data));
+        
         // Clear the form
         this.newAssignment = { employeeId: '', certificationId: '', dateCompleted: '' };
       },
       error: (err) => {
-        console.error('Error saving', err);
-        alert('Something went wrong. Check the console');
+        console.error('Error saving:', err);
+        alert('Something went wrong. Check the console.');
       }
     });
   }
