@@ -8,11 +8,15 @@ export interface Employee {
   id: number;
   firstName: string;
   lastName: string;
+  role: string;
+  department: string;
+  email: string;
 }
 
 export interface Certification {
   id: number;
   name: string;
+  validityPeriodMonth: number;
 }
 
 export interface EmployeeCertification {

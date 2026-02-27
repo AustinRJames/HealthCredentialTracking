@@ -39,7 +39,7 @@ export class CredentialTrackerComponent implements OnInit {
   newCert = {
     name: '',
     issuingAuthority: '',
-    renewalPeriodInMonths: 12
+    validityPeriodMonth: 12
   };
 
 
@@ -64,7 +64,14 @@ export class CredentialTrackerComponent implements OnInit {
     // this.api.getEmployeeCertifications().subscribe(data => this.certifications = data);
     // Load dropdown list
     this.api.getEmployees().subscribe(data => this.employeeList = data);
-    this.api.getCertifications().subscribe(data => this.certList = data);
+    // this.api.getCertifications().subscribe(data => this.certList = data);
+    this.api.getCertifications().subscribe({
+      next: (data) => {
+        this.certList = data;
+        console.log('CERT DATA ARRIVED:', data);
+      },
+      error: (err) => console.error('TABLE FETCH ERROR:', err)
+    });
   }
 
   onSubmit(): void {
@@ -113,7 +120,7 @@ export class CredentialTrackerComponent implements OnInit {
         // Reload lists
         this.api.getCertifications().subscribe(data => this.certList = data);
         // Clear from
-        this.newCert = { name: '', issuingAuthority: '', renewalPeriodInMonths: 12 };
+        this.newCert = { name: '', issuingAuthority: '', validityPeriodMonth: 12 };
       },
       error: (err) => console.error('Error creating certification', err)
     });
