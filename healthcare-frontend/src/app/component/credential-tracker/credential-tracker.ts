@@ -84,7 +84,6 @@ loadData(): void {
     // Send it to backend
     this.api.assignCertifications(payload).subscribe({
       next: () => {
-        alert('Success! Certification Assigned.');
         // Refresh the main table signal to show the new assignment
         this.api.getEmployeeCertifications().subscribe(data => this.certifications.set(data));
         
@@ -105,7 +104,6 @@ loadData(): void {
         this.api.getEmployees().subscribe(data => this.employeeList.set(data));
         // Clear form
         this.newEmployee = { firstName: '', lastName: '', role: '', department: '', email: '' };
-
       },
       error: (err) => console.error('Error creating employee!', err)
     });
@@ -142,9 +140,29 @@ loadData(): void {
         },
         error: (err) => {
           console.error('Error deleting employee:', err);
-          alert('Could not delete. Check console.')
+          alert('Could not delete. Check console.');
         }
       });
+    }
+  }
+
+  onDeleteCertification(id: number): void {
+    // Confirm they want to delete
+    const isConfirmed = confirm('Are you sure you want to delete this certification? This will also delete from Employee Certifications.');
+
+    if (isConfirmed) {
+      // Send delete request
+      this.api.deleteCertification(id).subscribe({
+        next: () => {
+          this.certList.update(currentList => currentList.filter(cert => cert.id !== id));
+
+          this.api.getEmployeeCertifications().subscribe(data => this.certifications.set(data));
+        },
+        error: (err) => {
+          console.error('Error deleting cert:', err);
+          alert('Could not delete. Check console.');
+        }
+      })
     }
   }
 }

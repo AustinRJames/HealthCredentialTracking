@@ -37,4 +37,25 @@ public class CertificationsController : ControllerBase
         return CreatedAtAction(nameof(GetCertifications), new { id = certification.Id }, certification);
     }
 
+    // Delete: api/certifications//id
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Certification>> DeleteCertification(int id)
+    {
+        var certification = await _context.Certifications.FindAsync(id);
+
+        if (certification == null)
+        {
+            return NotFound();
+        }
+
+        // Remove Cert
+        _context.Certifications.Remove(certification);
+
+        // Save Changes
+        await _context.SaveChangesAsync();
+
+        // Return 204
+        return NoContent();
+    }
+
 }

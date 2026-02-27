@@ -72,7 +72,12 @@ export class Api {
 
   // Delete employee based on ID
   deleteEmployee(id : number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/Employees/${id}`)
+    return this.http.delete(`${this.baseUrl}/Employees/${id}`);
+  }
+
+  // Delete cert based on ID
+  deleteCertification(id : number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/Certifications/${id}`);
   }
 
 }
