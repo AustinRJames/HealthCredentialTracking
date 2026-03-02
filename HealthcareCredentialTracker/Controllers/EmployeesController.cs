@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
@@ -25,6 +26,7 @@ public class EmployeesController : ControllerBase
     }
 
     // POST: api/employees
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
     {
@@ -38,6 +40,7 @@ public class EmployeesController : ControllerBase
         return CreatedAtAction(nameof(GetEmployees), new { id = employee.Id }, employee);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployee(int id)
     {

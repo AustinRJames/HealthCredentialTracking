@@ -84,4 +84,29 @@ export class Api {
     return this.http.delete(`${this.baseUrl}/EmployeeCertification/${employeeId}/${certId}`);
   }
 
+  // Send username/password to backend to get token
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Auth/Login`, credentials);
+  }
+
+  // Save token to browser's local storage
+  setToken(token: string): void {
+    localStorage.setItem('jwt_token', token);
+  }
+
+  // Get token from wallet
+  getToken(): string | null {
+    return localStorage.getItem('jwt_token');``
+  }
+
+  // Check if user has a token
+  isLoggedIn(): boolean {
+    return this.getToken() !== null;
+  }
+
+  // Throw token away
+  logout(): void {
+    localStorage.removeItem('jwt_token');
+  }
+
 }
