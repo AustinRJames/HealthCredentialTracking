@@ -12,7 +12,7 @@ export const routes: Routes = [
         component: CredentialTrackerComponent,
         canActivate: [authGuard]
      },
-    // If the blank root then go to login. If you type in gibberish will also redirect to login
+    // If the blank root th en go to login. If you type in gibberish will also redirect to login
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: '**', redirectTo: '/login' }
 ];

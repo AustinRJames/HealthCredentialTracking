@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Models;
+using System.Data.Common;
 
 namespace HealthcareCredentialTracker.Data;
 
@@ -12,6 +13,10 @@ public class HealthcareContext : DbContext
     public DbSet<Employee> Employees { get; set; }
     public DbSet<Certification> Certifications { get; set; }
     public DbSet<EmployeeCertification> EmployeeCertifications { get; set; }
+
+    public DbSet<User> Users { get; set; }
+    public DbSet<Department> Departments { get; set; }
+    public DbSet<DepartmentCertification> DepartmentCertifications { get; set;}
 
     // Override default database schema generation
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,6 +38,23 @@ public class HealthcareContext : DbContext
             .HasOne(ec => ec.Certification)
             .WithMany(e => e.EmployeeCertifications)
             .HasForeignKey(ec => ec.CertificationId);
+
+        // Config Composite key for dept rules join table
+        modelBuilder.Entity<DepartmentCertification>()
+            .HasKey(dc => new { dc.DepartmentId, dc.CertificationId});
+
+        // Seed admin user so we aren't locked out
+        var adminHash  = "$2a$10$kypbnGGCpJ7UQlysnqzJG.6H.dUewn7UPVWA3Ip.E.8U4jlVnFNnu";
+
+        modelBuilder.Entity<User>().HasData(
+            new User
+            {
+                Id = 1,
+                Username = "admin",
+                PasswordHash = adminHash,
+                Role = "Admin"
+            }
+        );
 
     }
 
