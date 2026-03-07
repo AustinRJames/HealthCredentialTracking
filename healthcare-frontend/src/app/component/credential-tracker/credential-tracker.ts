@@ -43,7 +43,7 @@ export class CredentialTrackerComponent implements OnInit {
 
 
   // Inject the service 
-  constructor(private api : Api) {}
+  constructor(public api : Api) {}
 
   // Runs automatically when the component loads on the screen
   ngOnInit(): void {

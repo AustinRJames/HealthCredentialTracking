@@ -1,25 +1,36 @@
 <div style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f8f9fa;">
-    <h2 style="text-align: center;">Admin Login</h2>
 
-    @if (errorMessage) {
-        <div style="color: white; background-color: #dc3545; padding: 10px; border-radius: 3px; margin-bottom: 15px; text-align: center;">
-            {{ errorMessage }}
+    @if (!api.isLoggedInSignal()){
+        <h2 style="text-align: center;">Admin Login</h2>
+
+        @if (errorMessage) {
+            <div style="color: white; background-color: #dc3545; padding: 10px; border-radius: 3px; margin-bottom: 15px; text-align: center;">
+                {{ errorMessage }}
+            </div>
+        }
+
+        <form (ngSubmit)="onSubmit()">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: bold;">Username</label>
+                <input type="text" [(ngModel)]="credentials.username" name="username" style="width: 100%; padding: 8px; margin-top: 5px;" required>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: bold;">Password</label>
+                <input type="password" [(ngModel)]="credentials.password" name="password" style="width: 100%; padding: 8px; margin-top: 5px;" required>
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 16px;">
+                Login
+            </button>
+        </form> 
+    }
+    @else {
+        <div style="text-align: center;">
+            <h2>Welcome Admin</h2>
+            <button (click)="api.logout()" style="width: 100%; padding: 10px; background-color: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 16px;">
+                Logout
+            </button>
         </div>
     }
-
-<form (ngSubmit)="onSubmit()">
-        <div style="margin-bottom: 15px;">
-            <label style="font-weight: bold;">Username</label>
-            <input type="text" [(ngModel)]="credentials.username" name="username" style="width: 100%; padding: 8px; margin-top: 5px;" required>
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-            <label style="font-weight: bold;">Password</label>
-            <input type="password" [(ngModel)]="credentials.password" name="password" style="width: 100%; padding: 8px; margin-top: 5px;" required>
-        </div>
-
-        <button type="submit" style="width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 16px;">
-            Login
-        </button>
-    </form>
 </div>

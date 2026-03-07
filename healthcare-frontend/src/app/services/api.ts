@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from "@angular/common/http"
 import { Observable } from 'rxjs';
 
@@ -36,6 +36,9 @@ export interface EmployeeCertification {
 export class Api {
   // Point to .NET backend port
   private baseUrl = 'http://localhost:5285/api';
+
+  // Create signal to see if token exists when the app first loads
+  isLoggedInSignal = signal<boolean>(this.getToken() !== null);
 
   // Dependency Injection
   constructor(private http: HttpClient) {}
@@ -84,6 +87,7 @@ export class Api {
     return this.http.delete(`${this.baseUrl}/EmployeeCertification/${employeeId}/${certId}`);
   }
 
+
   // Send username/password to backend to get token
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/Auth/Login`, credentials);
@@ -92,6 +96,7 @@ export class Api {
   // Save token to browser's local storage
   setToken(token: string): void {
     localStorage.setItem('jwt_token', token);
+    this.isLoggedInSignal.set(true);
   }
 
   // Get token from wallet
@@ -99,14 +104,10 @@ export class Api {
     return localStorage.getItem('jwt_token');``
   }
 
-  // Check if user has a token
-  isLoggedIn(): boolean {
-    return this.getToken() !== null;
-  }
-
   // Throw token away
   logout(): void {
     localStorage.removeItem('jwt_token');
+    this.isLoggedInSignal.set(false);
   }
 
 }

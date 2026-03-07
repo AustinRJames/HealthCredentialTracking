@@ -13,7 +13,7 @@ export class Login {
   credentials = { username: '', password: '' };
   errorMessage = '';
 
-  constructor(private api: Api) {}
+  constructor(public api: Api) {}
 
   onSubmit(): void {
     this.api.login(this.credentials).subscribe({
