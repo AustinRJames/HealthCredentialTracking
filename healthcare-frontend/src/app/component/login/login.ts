@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../../services/api'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class Login {
   credentials = { username: '', password: '' };
   errorMessage = '';
 
-  constructor(public api: Api) {}
+  constructor(public api: Api, private router: Router) {}
 
   onSubmit(): void {
     this.api.login(this.credentials).subscribe({
@@ -23,7 +24,7 @@ export class Login {
 
         // Clear error message
         this.errorMessage = '';
-        alert('Login successful!')
+        this.router.navigate(['/admin']);
       },
       error: () => {
         this.errorMessage = 'Invalid username or password';

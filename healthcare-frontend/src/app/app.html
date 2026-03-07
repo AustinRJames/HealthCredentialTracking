@@ -1,2 +1,19 @@
-<app-login></app-login>
-<app-credential-tracker></app-credential-tracker>
+<nav style="background-color: #212529; padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center;">
+    <h2 style="margin: 0;">Credential Pro</h2>
+
+    <div>
+        <a routerLink="/admin" style="color: white; margin-right: 15px; text-decoration: none;">Admin Dashboard</a>
+
+        @if (api.isLoggedInSignal()) {
+            <button (click)="api.logout(); router.navigate(['/login'])" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;"> 
+                logout
+            </button>
+        } @else {
+            <a routerLink="/login" style="color: white; text-decoration: none;">Login</a>
+        }
+    </div>
+</nav>
+
+<div style="padding: 20px;">
+    <router-outlet></router-outlet>
+</div>
