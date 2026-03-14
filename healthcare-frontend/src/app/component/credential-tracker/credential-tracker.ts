@@ -2,11 +2,12 @@ import { Component, OnInit, signal } from '@angular/core'
 import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { Api, Certification, Employee, EmployeeCertification } from '../../services/api'
+import { DepartmentManager } from '../department-manager/department-manager'
 
 @Component({
   selector: 'app-credential-tracker',
   standalone: true,
-  imports: [CommonModule, DatePipe, FormsModule],
+  imports: [CommonModule, DatePipe, FormsModule, DepartmentManager],
   templateUrl: './credential-tracker.html',
   styleUrl: './credential-tracker.css'
 })

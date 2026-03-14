@@ -19,10 +19,31 @@ public class EmployeesController : ControllerBase
 
     // GET: api/employees
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+    public async Task<ActionResult<IEnumerable<object>>> GetEmployees()
     {
-        // Async/await to free up server thread while waiting for db to response
-        return await _context.Employees.ToListAsync();
+        var employees = await _context.Employees
+            .Include(e => e.Department) 
+            .Include(e => e.EmployeeCertifications)
+            .ThenInclude(ec => ec.Certification)
+            .Select(e => new 
+            {
+                Id = e.Id,
+                
+                // (Adjust these to match your actual model properties if needed)
+                FirstName = e.FirstName, 
+                LastName = e.LastName, 
+                
+                // We grab the Name from the Department object now
+                DepartmentName = e.Department != null ? e.Department.Name : "Unassigned",                
+                Certifications = e.EmployeeCertifications.Select(ec => new 
+                {
+                    Id = ec.Certification!.Id,
+                    Name = ec.Certification.Name
+                }).ToList()
+            })
+            .ToListAsync();
+
+        return Ok(employees);
     }
 
     // POST: api/employees

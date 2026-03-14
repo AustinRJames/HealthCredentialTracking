@@ -1,0 +1,24 @@
+<div class="card">
+    <h2>Hospital Departments</h2>
+
+    <ul *ngIf="departments().length > 0; else noDepts">
+        <li *ngFor="let dept of departments()">
+            <strong> {{ dept.name }} </strong>
+        </li>
+    </ul>
+
+    <ng-template #noDepts>
+        <p>No departments found. Create one below</p>
+    </ng-template>
+
+    <hr />
+
+    <div class="add-department-form">
+        <input
+            type="text"
+            [(ngModel)]="newDepartmentName"
+            placeholder="eg., Intensive Care Unit (ICU)"
+        />
+        <button type="button" (click)="createDepartment()">Add Department</button>
+    </div>
+</div>
