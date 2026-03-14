@@ -1,24 +1,49 @@
 <div class="card">
-    <h2>Hospital Departments</h2>
 
-    <ul *ngIf="departments().length > 0; else noDepts">
-        <li *ngFor="let dept of departments()">
-            <strong> {{ dept.name }} </strong>
-        </li>
-    </ul>
-
-    <ng-template #noDepts>
-        <p>No departments found. Create one below</p>
-    </ng-template>
-
-    <hr />
-
-    <div class="add-department-form">
-        <input
-            type="text"
-            [(ngModel)]="newDepartmentName"
-            placeholder="eg., Intensive Care Unit (ICU)"
-        />
-        <button type="button" (click)="createDepartment()">Add Department</button>
+    <div style="padding: 15px; border-radius: 5px;">
+        <h3>Hospital Departments</h3>
+        <table borders="1" cellPadding="10">
+            <tr style="background: #f2f2f2">
+                <th>Department Name</th>
+                <th>Required Certification</th>
+                <th>Actions</th>
+            </tr>
+        @for (dept of departments(); track dept.id) {
+            <tr>
+                <td>{{ dept.name }}</td>
+                <td>
+                    @for (cert of dept.requiredCerts; track cert.id) {
+                        <span style="background: #e9ecef; padding: 2px 6px; border-radius: 4px; margin-right: 4px; font-size: 0.9em;">
+                            {{ cert.name }}
+                        </span>
+                    }
+                </td>
+                @if (isLoggedIn) {
+                    <td style="text-align: center;">
+                        <button (click)="onDeleteDepartment(dept.id)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                            Delete
+                        </button>
+                    </td>
+                }
+            </tr>
+        }
+        </table>
     </div>
+
+    <div style="background-color: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
+        <h3>Add New Department</h3>
+        <form (ngSubmit)="createDepartment()" style="display: flex; flex-direction: column; gap: 8px;">
+            <input type="text" placeholder="Department Name" [(ngModel)]="newDepartmentName" name="fName" required>
+            
+            <select name="cert" [(ngModel)]="selectedCertIds" multiple required style="padding: 5px; min-height: 80px;">
+                @for (cert of certList(); track cert.id) {
+                    <option [value]="cert.id">{{ cert.name }}</option>
+                }
+            </select>
+            <small style="color: #666;">Hold Ctrl (Windows) or Cmd (Mac) to select multiple</small>
+
+            <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 4px;">Create Department</button> 
+        </form>
+    </div>
+    
 </div>

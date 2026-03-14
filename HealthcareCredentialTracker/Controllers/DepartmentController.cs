@@ -71,5 +71,27 @@ namespace HealthcareCredentialTracker.Controllers
 
             return Ok(new {message = "Rule add successfully!"});
         }
+
+
+    // Delete: api/departments/id
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteDepartment(int id)
+    {
+        var department = await _context.Departments.FindAsync(id);
+
+        if (department == null)
+        {
+            return NotFound();
+        }
+
+        // Remove Department
+        _context.Departments.Remove(department);
+
+        // Save Changes
+        await _context.SaveChangesAsync();
+
+        // Return 204
+        return NoContent();
+    }
     }
 }
