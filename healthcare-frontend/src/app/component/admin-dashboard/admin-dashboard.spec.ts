@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CredentialTrackerComponent } from './credential-tracker';
+import { AdminDashboardComponent } from './admin-dashboard';
 
-describe('CredentialTracker', () => {
-  let component: CredentialTrackerComponent;
-  let fixture: ComponentFixture<CredentialTrackerComponent>;
+describe('AdminDashboard', () => {
+  let component: AdminDashboardComponent;
+  let fixture: ComponentFixture<AdminDashboardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CredentialTrackerComponent]
+      imports: [AdminDashboardComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CredentialTrackerComponent);
+    fixture = TestBed.createComponent(AdminDashboardComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

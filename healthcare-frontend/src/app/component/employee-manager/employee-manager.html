@@ -1,0 +1,52 @@
+@if (authService.isLoggedInSignal()) {
+    <div style="background-color: #e9ecef; padding: 15px; border-radius: 5px; flex: 1;">
+        <h3>Add New Employee</h3>
+        <form (ngSubmit)="onSubmitEmployee()" style="display: flex; flex-direction: column; gap: 8px;">
+            <input type="text" placeholder="First Name" [(ngModel)]="newEmployee.firstName" name="fName" required>
+            <input type="text" placeholder="Last Name" [(ngModel)]="newEmployee.lastName" name="lName" required>
+            <input type="text" placeholder="Role (Eg. Nurse)" [(ngModel)]="newEmployee.role" name="role" required>
+            <select name="departmentId" [(ngModel)]="newEmployee.departmentId" required style="padding: 5px;">
+                <option [ngValue]="null" disabled selected>Assign to Department...</option>
+                @for (dept of departmentList(); track dept.id) {
+                    <option [ngValue]="dept.id">{{ dept.name }}</option>
+                }
+            </select>
+            <input type="text" placeholder="Email" [(ngModel)]="newEmployee.email" name="email" required>
+            <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 6px; cursor: pointer;">Save Employee</button>
+        </form>
+    </div>
+}
+
+<div style="padding: 15px; border-radius: 5px;">
+    <h3>Employees</h3>
+    <table borders="1" cellPadding="10">
+        <tr style="background: #f2f2f2">
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+        @for (emp of employeeList(); track emp.id) {
+            <tr>
+                <td>{{ emp.firstName }}</td>
+                <td>{{ emp.lastName }}</td>
+                <td>{{ emp.role || 'N/A' }}</td>
+                <td>{{ emp.departmentName || 'N/A' }}</td>
+                <td>{{ emp.email || 'No Email Provided' }}</td>
+                @if (authService.isLoggedInSignal()) {
+                    <td style="text-align: center;">
+                        <button (click)="onDeleteEmployee(emp.id)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                            Delete
+                        </button>
+                    </td>
+                }
+            </tr>
+        } @empty {
+            <tr>
+                <td colspan="6">No Employees yet. Use the form above to add one!</td>
+            </tr>
+        }
+    </table>
+</div>

@@ -1,0 +1,37 @@
+@if (authService.isLoggedInSignal()) {
+    <div style="background-color: #e9ecef; padding: 15px; border-radius: 5px; flex: 1;">
+        <h3>Add New Certification</h3>
+        <form (ngSubmit)="onSubmitCertification()" style="display: flex; flex-direction: column; gap: 8px;">
+            <input type="text" placeholder="Certification Name" [(ngModel)]="newCert.name" name="cName" required>
+            <label style="font-size: 14px;">Renewal Period (Months)</label>
+            <input type="number" [(ngModel)]="newCert.validityPeriodMonth" name="months" required>
+            <button type="submit" style="background-color: #17a2b8; color: white; border: none; padding: 6px; cursor: pointer;">Save Certification</button>
+        </form>
+    </div>
+
+    <div style="padding: 15px; border-radius: 5px;">
+        <h3>Certifications</h3>
+        <table borders="1" cellPadding="10">
+            <tr style="background: #f2f2f2">
+                <th>Name</th>
+                <th>Renewal Period (Months)</th>
+                <th>Actions</th>
+            </tr>
+            @for (cert of certList(); track cert.id) {
+                <tr>
+                    <td>{{ cert.name }}</td>
+                    <td>{{ cert.validityPeriodMonth }}</td>
+                    <td style="text-align: center;">
+                        <button (click)="onDeleteCertification(cert.id)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            } @empty {
+                <tr>
+                    <td colspan="3">No certifications yet. Use the form above to add one!</td>
+                </tr>
+            }
+        </table>
+    </div>
+}
