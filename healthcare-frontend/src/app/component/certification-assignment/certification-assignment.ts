@@ -11,6 +11,7 @@ import { CertificationService } from '../../services/certification.service';
   standalone: true,
   imports: [CommonModule, DatePipe, FormsModule],
   templateUrl: './certification-assignment.html',
+  styleUrl: 'certification-assignment.css',
 })
 export class CertificationAssignmentComponent implements OnInit {
   certifications = signal<EmployeeCertification[]>([]);

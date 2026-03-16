@@ -11,6 +11,7 @@ import { DepartmentService } from '../../services/department';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './employee-manager.html',
+  styleUrl: './employee-manager.css'
 })
 export class EmployeeManagerComponent implements OnInit {
   @Output() employeeDeleted = new EventEmitter<void>();

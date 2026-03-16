@@ -10,6 +10,7 @@ import { CertificationService } from '../../services/certification.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './certification-manager.html',
+  styleUrl: './certification-manager.css'
 })
 export class CertificationManagerComponent implements OnInit {
   @Output() certificationDeleted = new EventEmitter<void>();
