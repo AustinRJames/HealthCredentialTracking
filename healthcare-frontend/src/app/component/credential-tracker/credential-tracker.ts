@@ -3,6 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import { Api, Certification, Employee, EmployeeCertification } from '../../services/api'
 import { DepartmentManager } from '../department-manager/department-manager'
+import { DepartmentService, Department } from '../../services/department'
 
 @Component({
   selector: 'app-credential-tracker',
@@ -15,6 +16,7 @@ import { DepartmentManager } from '../department-manager/department-manager'
 export class CredentialTrackerComponent implements OnInit {
 
   certifications = signal<EmployeeCertification[]>([]);
+  departmentList = signal<Department[]>([]);
   employeeList = signal<Employee[]>([]);
   certList = signal<Certification[]>([]);
 
@@ -30,8 +32,8 @@ export class CredentialTrackerComponent implements OnInit {
     firstName: '',
     lastName: '',
     role: '',
-    department: '',
-    email: ''
+    email: '',
+    departmentId: null
   };
 
   // Data for new cert
@@ -44,7 +46,10 @@ export class CredentialTrackerComponent implements OnInit {
 
 
   // Inject the service 
-  constructor(public api : Api) {}
+  constructor(
+    public api : Api,
+    private departmentService: DepartmentService
+  ) {}
 
   // Runs automatically when the component loads on the screen
   ngOnInit(): void {
@@ -55,6 +60,10 @@ loadData(): void {
     this.api.getEmployeeCertifications().subscribe(data => this.certifications.set(data));
     this.api.getEmployees().subscribe(data => this.employeeList.set(data));
     this.api.getCertifications().subscribe(data => this.certList.set(data));
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => this.departmentList.set(data),
+      error: (err) => console.error('Error loading departments', err)
+    });
   }
 
   onSubmit(): void {
@@ -99,16 +108,31 @@ loadData(): void {
   }
 
   onSubmitEmployee(): void {
-    this.api.createEmployee(this.newEmployee).subscribe({
+    // 1. Create a clean copy of the employee data
+    const payload = {
+      firstName: this.newEmployee.firstName,
+      lastName: this.newEmployee.lastName,
+      role: this.newEmployee.role,
+      email: this.newEmployee.email,
+      departmentId: this.newEmployee.departmentId
+    };
+
+    // 2. Send the perfectly clean payload to C#
+    this.api.createEmployee(payload).subscribe({
       next: () => {
-        // Reload lists
-        this.api.getEmployees().subscribe(data => this.employeeList.set(data));
-        // Clear form
-        this.newEmployee = { firstName: '', lastName: '', role: '', department: '', email: '' };
+        alert("Employee Created!");
+        // Refresh your list here if you have one
+        
+        // Reset the form
+        this.newEmployee = { firstName: '', lastName: '', role: '', email: '', departmentId: null };
       },
-      error: (err) => console.error('Error creating employee!', err)
+      error: (err) => {
+        console.error('C# Validation Errors:', err.error); 
+      }
     });
   }
+
+
 
   onSubmitCertification(): void {
     this.api.createCertifications(this.newCert).subscribe({

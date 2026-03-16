@@ -9,8 +9,13 @@ export interface Employee {
   firstName: string;
   lastName: string;
   role: string;
-  department: string;
   email: string;
+
+  departmentId?: number | null;
+
+  departmentName?: string;
+  certifications: any[];
+
 }
 
 export interface Certification {

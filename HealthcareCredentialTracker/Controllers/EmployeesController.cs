@@ -32,6 +32,9 @@ public class EmployeesController : ControllerBase
                 // (Adjust these to match your actual model properties if needed)
                 FirstName = e.FirstName, 
                 LastName = e.LastName, 
+
+                Role = e.Role,
+                Email = e.Email,
                 
                 // We grab the Name from the Department object now
                 DepartmentName = e.Department != null ? e.Department.Name : "Unassigned",                
