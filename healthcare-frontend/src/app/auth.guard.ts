@@ -1,17 +1,14 @@
 import { inject } from '@angular/core'
 import { CanActivateFn, Router } from '@angular/router'
-import { Api } from './services/api'
+import { AuthService } from './services/auth.service'
 
 export const authGuard: CanActivateFn = (route, state) => {
-    // Inject tools
-    const api = inject(Api);
+    const authService = inject(AuthService);
     const router = inject(Router);
 
-    // Check token
-    if (api.isLoggedInSignal()) {
-        return true; // Let them through
+    if (authService.isLoggedInSignal()) {
+        return true;
     } else {
-        // Kick to login screen if not verified
         router.navigate(['/login']);
         return false;
     }

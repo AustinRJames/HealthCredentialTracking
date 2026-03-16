@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Api } from '../../services/api'
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,15 +14,12 @@ export class Login {
   credentials = { username: '', password: '' };
   errorMessage = '';
 
-  constructor(public api: Api, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
-    this.api.login(this.credentials).subscribe({
+    this.authService.login(this.credentials).subscribe({
       next: (response) => {
-        // Save token to browser's wallet
-        this.api.setToken(response.token);
-
-        // Clear error message
+        this.authService.setToken(response.token);
         this.errorMessage = '';
         this.router.navigate(['/admin']);
       },
@@ -31,5 +28,4 @@ export class Login {
       }
     });
   }
-
 }

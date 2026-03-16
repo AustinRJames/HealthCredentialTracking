@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
-import { Api } from './services/api'
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +11,5 @@ import { Api } from './services/api'
 export class App {
   protected readonly title = signal('healthcare-frontend');
 
-  constructor(public api: Api, public router: Router) {};
-  
+  constructor(public authService: AuthService, public router: Router) {}
 }
