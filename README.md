@@ -60,3 +60,11 @@ npm start
 | `admin`  | `admin`  |
 
 The admin user is seeded automatically when migrations are applied.
+
+--
+
+## Roadmap
+1. Add analytics for admin to see how far along employees are with training for certifications. Including graphical breakdowns.
+2. Add employee dashboard.
+3. Make visually more appealing.
+4. Ability to host videos.
