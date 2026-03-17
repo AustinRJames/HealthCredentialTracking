@@ -34,4 +34,8 @@ export class CertificationService {
   revokeCertification(employeeId: number, certId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/EmployeeCertification/${employeeId}/${certId}`);
   }
+
+  updateCertification(id: number, payload: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/Certifications/${id}`, payload);
+  }
 }

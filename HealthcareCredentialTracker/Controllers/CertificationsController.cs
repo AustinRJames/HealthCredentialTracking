@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
 using System.Runtime.Versioning;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HealthcareCredentialTracking.Controllers;
 
@@ -55,6 +56,17 @@ public class CertificationsController : ControllerBase
         await _context.SaveChangesAsync();
 
         // Return 204
+        return NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutCertification(int id, Certification cert)
+    {
+        if (id != cert.Id) return BadRequest("ID does not match cert ID");
+
+        _context.Entry(cert).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+
         return NoContent();
     }
 

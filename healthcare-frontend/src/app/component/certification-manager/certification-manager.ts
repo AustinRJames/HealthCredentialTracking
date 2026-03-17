@@ -16,6 +16,7 @@ export class CertificationManagerComponent implements OnInit {
   @Output() certificationDeleted = new EventEmitter<void>();
 
   certList = signal<Certification[]>([]);
+  selectedCertification = signal<Certification | null>(null);
 
   newCert = {
     name: '',
@@ -62,5 +63,30 @@ export class CertificationManagerComponent implements OnInit {
         }
       });
     }
+  }
+
+  onEditCertification(id: number, cert: Certification): void {
+    this.selectedCertification.set({...cert});
+  }
+
+  onCancelEdit(): void {
+    this.selectedCertification.set(null);
+  }
+
+  onUpdateCertification(): void {
+    const cert = this.selectedCertification();
+
+    if (!cert) return;
+
+    this.certService.updateCertification(cert.id, cert).subscribe({
+      next:() => {
+        this.loadData();
+        this.selectedCertification.set(null);
+      },
+      error: (err) => {
+        console.log('Error updating certification.', err);
+        alert('Error updating certification. See console');
+      }
+    });
   }
 }

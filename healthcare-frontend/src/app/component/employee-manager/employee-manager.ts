@@ -94,10 +94,8 @@ export class EmployeeManagerComponent implements OnInit {
   }
 
   onUpdateEmployee(): void {
-    console.log('Updating employee');
     const emp = this.selectedEmployee();
     if (!emp) return;
-    console.log('Still updating')
 
     this.employeeService.updateEmployee(emp.id, emp).subscribe({
       next:() => {
@@ -109,7 +107,7 @@ export class EmployeeManagerComponent implements OnInit {
         console.log('Could not edit employee', err);
         alert('Could not update employee. See console');
       }
-
-    })
+    });
+    
   }
 }
