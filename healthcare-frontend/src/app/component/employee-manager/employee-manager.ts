@@ -15,9 +15,11 @@ import { DepartmentService } from '../../services/department';
 })
 export class EmployeeManagerComponent implements OnInit {
   @Output() employeeDeleted = new EventEmitter<void>();
+  @Output() employedEdited = new EventEmitter<void>();
 
   employeeList = signal<Employee[]>([]);
   departmentList = signal<Department[]>([]);
+  selectedEmployee = signal<Employee | null>(null);
 
   newEmployee = {
     firstName: '',
@@ -79,5 +81,33 @@ export class EmployeeManagerComponent implements OnInit {
         }
       });
     }
+  }
+
+  onEditEmployee(emp: Employee): void {
+    this.selectedEmployee.set({...emp}); // Spread so you're editing a copy, not original
+  }
+
+  onCancelEdit(): void {
+    this.selectedEmployee.set(null);
+  }
+
+  onUpdateEmployee(): void {
+    console.log('Updating employee');
+    const emp = this.selectedEmployee();
+    if (!emp) return;
+    console.log('Still updating')
+
+    this.employeeService.updateEmployee(emp.id, emp).subscribe({
+      next:() => {
+        this.employedEdited.emit();
+        this.loadData();
+        this.selectedEmployee.set(null);
+      }, 
+      error: (err) => {
+        console.log('Could not edit employee', err);
+        alert('Could not update employee. See console');
+      }
+
+    })
   }
 }

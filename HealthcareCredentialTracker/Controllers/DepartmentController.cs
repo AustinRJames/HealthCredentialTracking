@@ -84,6 +84,15 @@ namespace HealthcareCredentialTracker.Controllers
             return NotFound();
         }
 
+        var employees = await _context.Employees
+            .Where(emp => emp.DepartmentId == id)
+            .ToListAsync();
+
+        foreach (var emp in employees)
+        {
+            emp.DepartmentId = null;
+        }
+
         // Remove Department
         _context.Departments.Remove(department);
 

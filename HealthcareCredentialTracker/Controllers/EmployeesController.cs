@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
+using System.Runtime.CompilerServices;
 
 namespace HealthcareCredentialTracker.Controllers;
 
@@ -85,5 +86,18 @@ public class EmployeesController : ControllerBase
         // Return 204 with no content
         return NoContent();
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutEmployee(int id, Employee employee)
+    {
+        if (id != employee.Id) return BadRequest();
+
+        _context.Entry(employee).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
 
 }   

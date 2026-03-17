@@ -26,4 +26,9 @@ export class AdminDashboardComponent {
   onCertificationDeleted(): void {
     this.certAssignRef.loadData();
   }
+
+  onEmployeeUpdated(): void {
+    this.certAssignRef.loadData();
+}
+
 }

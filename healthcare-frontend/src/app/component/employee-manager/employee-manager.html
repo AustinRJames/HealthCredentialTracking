@@ -37,9 +37,15 @@
                 <td>{{ emp.email || 'No Email Provided' }}</td>
                 @if (authService.isLoggedInSignal()) {
                     <td style="text-align: center;">
-                        <button (click)="onDeleteEmployee(emp.id)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
-                            Delete
-                        </button>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <button (click)="onEditEmployee(emp)" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Edit
+                            </button>
+                            <button (click)="onDeleteEmployee(emp.id)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Delete
+                            </button>
+                        </div>
+   
                     </td>
                 }
             </tr>
@@ -50,3 +56,20 @@
         }
     </table>
 </div>
+
+@if (selectedEmployee()) {
+    <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <h3>Edit Employee</h3>
+        <form (ngSubmit)="onUpdateEmployee()" style="display: flex; flex-direction: column; margin-bottom: 20px;">
+            <input type="text" [(ngModel)]="selectedEmployee()!.firstName" name="editFName">
+            <input type="text" [(ngModel)]="selectedEmployee()!.lastName" name="ediLFName">
+            <input type="text" [(ngModel)]="selectedEmployee()!.role" name="editRole">
+            <input type="text" [(ngModel)]="selectedEmployee()!.email" name="editEmail">
+            <div style="display: flex; gap: 8px">
+                <button type="submit">Save</button>
+                <button type="button" (click)="onCancelEdit()">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+}
