@@ -65,6 +65,12 @@
             <input type="text" [(ngModel)]="selectedEmployee()!.lastName" name="ediLFName">
             <input type="text" [(ngModel)]="selectedEmployee()!.role" name="editRole">
             <input type="text" [(ngModel)]="selectedEmployee()!.email" name="editEmail">
+            <select [(ngModel)]="selectedEmployee()!.departmentId" name="editDept" style="padding: 5px;">
+                <option [ngValue]="null">Unassigned</option>
+                @for (dept of departmentList(); track dept.id) {
+                    <option [ngValue]="dept.id">{{ dept.name }}</option>
+                }
+            </select>
             <div style="display: flex; gap: 8px">
                 <button type="submit">Save</button>
                 <button type="button" (click)="onCancelEdit()">Cancel</button>

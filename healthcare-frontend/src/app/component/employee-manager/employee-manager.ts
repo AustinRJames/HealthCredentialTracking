@@ -84,6 +84,8 @@ export class EmployeeManagerComponent implements OnInit {
   }
 
   onEditEmployee(emp: Employee): void {
+    console.log(typeof emp.departmentId, emp.departmentId);
+
     this.selectedEmployee.set({...emp}); // Spread so you're editing a copy, not original
   }
 

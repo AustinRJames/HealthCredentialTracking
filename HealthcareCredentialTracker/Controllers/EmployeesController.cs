@@ -38,6 +38,7 @@ public class EmployeesController : ControllerBase
                 Email = e.Email,
                 
                 // We grab the Name from the Department object now
+                DepartmentId = e.DepartmentId,
                 DepartmentName = e.Department != null ? e.Department.Name : "Unassigned",                
                 Certifications = e.EmployeeCertifications.Select(ec => new 
                 {
