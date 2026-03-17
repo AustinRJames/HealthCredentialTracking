@@ -72,35 +72,64 @@ namespace HealthcareCredentialTracker.Controllers
             return Ok(new {message = "Rule add successfully!"});
         }
 
-
-    // Delete: api/departments/id
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDepartment(int id)
-    {
-        var department = await _context.Departments.FindAsync(id);
-
-        if (department == null)
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{departmentId}/require-cert/{certId}")]
+        public async Task<IActionResult> UnrequireCert(int departmentId, int certId)
         {
-            return NotFound();
+            var record = await _context.DepartmentCertifications
+                .FirstOrDefaultAsync(dc => dc.DepartmentId == departmentId && dc.CertificationId == certId);
+
+            if (record == null) return NotFound();
+
+            _context.DepartmentCertifications.Remove(record);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        var employees = await _context.Employees
-            .Where(emp => emp.DepartmentId == id)
-            .ToListAsync();
-
-        foreach (var emp in employees)
+        // Delete: api/departments/id
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDepartment(int id)
         {
-            emp.DepartmentId = null;
+            var department = await _context.Departments.FindAsync(id);
+
+            if (department == null)
+            {
+                return NotFound();
+            }
+
+            var employees = await _context.Employees
+                .Where(emp => emp.DepartmentId == id)
+                .ToListAsync();
+
+            foreach (var emp in employees)
+            {
+                emp.DepartmentId = null;
+            }
+
+            // Remove Department
+            _context.Departments.Remove(department);
+
+            // Save Changes
+            await _context.SaveChangesAsync();
+
+            // Return 204
+            return NoContent();
         }
 
-        // Remove Department
-        _context.Departments.Remove(department);
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDepartment(int id, Department department)
+        {
+            if (id != department.Id) return BadRequest();
 
-        // Save Changes
-        await _context.SaveChangesAsync();
+            _context.Entry(department).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-        // Return 204
-        return NoContent();
-    }
+            return NoContent();
+        }
+
+        
     }
 }

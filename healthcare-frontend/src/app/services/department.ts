@@ -23,7 +23,16 @@ export class DepartmentService {
     return this.http.post(`${this.apiUrl}/${departmentId}/require-cert/${certId}`, {});
   }
 
+  unrequireCertification(departmentId: number, certId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${departmentId}/require-cert/${certId}`);
+  }
+
   deleteDepartment(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  updateDepartment(id: number, payload: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, payload);
+  }
+
 }

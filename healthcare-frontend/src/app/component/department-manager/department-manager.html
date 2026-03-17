@@ -20,9 +20,14 @@
                 </td>
                 @if (isLoggedIn) {
                     <td style="text-align: center;">
-                        <button (click)="onDeleteDepartment(dept.id)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
-                            Delete
-                        </button>
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <button (click)="onEditDepartment(dept)" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Edit
+                            </button>
+                            <button (click)="onDeleteDepartment(dept.id)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                                Delete
+                            </button>
+                        </div>
                     </td>
                 }
             </tr>
@@ -47,3 +52,31 @@
     </div>
     
 </div>
+
+@if (selectedDepartment()) {
+    <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <h3>Edit Department</h3>
+        <form (ngSubmit)="onUpdateDepartment()" style="padding: flex; flex-direction: column; margin-bottom: 20px;">
+            <input type="text" [(ngModel)]="selectedDepartment()!.name" name="editDName" required>
+            <div>
+                <label>Required Certifications:</label>
+                @for (cert of certList(); track cert.id) {
+                    <div>
+                        <input 
+                            type="checkbox"
+                            [id]="'edit-cert-' + cert.id"
+                            [checked]="isEditCertSelected(cert.id)"
+                            (change)="toggleEditCert(cert.id)">
+                        <label [for]="'edit-cert-' + cert.id">{{ cert.name }}</label>
+                    </div>
+                }
+            </div>
+
+            <div style="display: flex; gap: 8px">
+                <button type="submit">Save</button>
+                <button type="button" (click)="onCancelEdit()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+}

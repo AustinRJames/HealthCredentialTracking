@@ -17,9 +17,12 @@ import { forkJoin } from 'rxjs';
 export class DepartmentManager implements OnInit {
   departments = signal<Department[]>([]);
   certList = signal<Certification[]>([]);
+  selectedDepartment = signal<Department | null>(null);
 
   newDepartmentName: string = '';
   selectedCertIds: number[] = [];
+  editCertIds = signal<number[]>([]);
+
 
   constructor(
     private departmentService: DepartmentService,
@@ -91,6 +94,57 @@ export class DepartmentManager implements OnInit {
         }
       });
     }
+  }
+
+  onEditDepartment(dept: Department): void {
+    this.selectedDepartment.set({...dept});
+    // Pull cert IDs out of requiredCerts array
+    const ids = (dept.requiredCerts ?? []).map((rc: any) => rc.certificationId ?? rc.id);
+    this.editCertIds.set(ids);
+  }
+
+  isEditCertSelected(certId: number): boolean {
+    return this.editCertIds().includes(certId);
+  }
+
+  toggleEditCert(certId: number): void {
+    const current = this.editCertIds();
+    if (current.includes(certId)) {
+      this.editCertIds.set(current.filter(id => id !== certId));
+    } else {
+      this.editCertIds.set([...current, certId]);
+    }
+  }
+
+  onCancelEdit(): void {
+    this.selectedDepartment.set(null);
+  }
+
+  onUpdateDepartment(): void {
+    const dept = this.selectedDepartment();
+    if (!dept) return;
+
+    const originalIds = (dept.requiredCerts ?? []).map((rc: any) => rc.certificationId ?? rc.id);
+    const newIds = this.editCertIds();
+
+    const toAdd = newIds.filter(id => !originalIds.includes(id));
+    const toRemove = originalIds.filter((id: number) => !newIds.includes(id));
+
+    this.departmentService.updateDepartment(dept.id, dept).subscribe({
+      next:() => {
+        const addReqs = toAdd.map((id: number) => this.departmentService.requireCertification(dept.id, id));
+        const removeReqs = toRemove.map((id: number) => this.departmentService.unrequireCertification(dept.id, id));
+
+        forkJoin([...addReqs, ...removeReqs]).subscribe({
+          next: () => { this.loadDepartments(); this.selectedDepartment.set(null); },
+          error: (err) => console.error(err)
+        });
+      },
+      error: (err) => {
+        console.log('Could not edit department', err);
+        alert('Could not edit department');
+      }
+    });
   }
 
   resetForm() {
