@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
-
+using Microsoft.AspNetCore.Authorization;
 using HealthcareCredentialTracker.Services;
+using System.Security.Cryptography.X509Certificates;
+using System.Reflection.Metadata;
 
 namespace HealthcareCredentialTracker.Controllers;
 
@@ -86,5 +88,4 @@ public class CertificationsController : ControllerBase
 
         return NoContent();
     }
-
 }

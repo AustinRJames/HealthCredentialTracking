@@ -30,3 +30,9 @@ export interface Department {
   name: string;
   requiredCerts?: any[];
 }
+
+export interface User {
+  employeeId: number;
+  username: string;
+  password: string;
+}
