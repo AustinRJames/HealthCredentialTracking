@@ -13,6 +13,7 @@ import { CertificationService } from '../../services/certification.service';
   styleUrl: './certification-manager.css'
 })
 export class CertificationManagerComponent implements OnInit {
+  @Output() certificationUpdated = new EventEmitter<void>();
   @Output() certificationDeleted = new EventEmitter<void>();
 
   certList = signal<Certification[]>([]);
@@ -80,6 +81,7 @@ export class CertificationManagerComponent implements OnInit {
 
     this.certService.updateCertification(cert.id, cert).subscribe({
       next:() => {
+        this.certificationUpdated.emit();
         this.loadData();
         this.selectedCertification.set(null);
       },

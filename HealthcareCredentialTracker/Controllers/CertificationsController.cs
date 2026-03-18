@@ -2,19 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HealthcareCredentialTracker.Data;
 using HealthcareCredentialTracker.Models;
-using System.Runtime.Versioning;
-using System.Security.Cryptography.X509Certificates;
 
-namespace HealthcareCredentialTracking.Controllers;
+using HealthcareCredentialTracker.Services;
+
+namespace HealthcareCredentialTracker.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class CertificationsController : ControllerBase
 {
     private readonly HealthcareContext _context;
-    public CertificationsController (HealthcareContext context)
+    private readonly ICertificationService _certificationService;
+    public CertificationsController (HealthcareContext context, ICertificationService certificationService)
     {
         _context = context;
+        _certificationService = certificationService;
     }
 
     // GET: api/certifications
@@ -25,6 +27,7 @@ public class CertificationsController : ControllerBase
     }
 
     // POST: api/certifications
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Certification>> PostCertifications(Certification certification)
     {
@@ -39,6 +42,7 @@ public class CertificationsController : ControllerBase
     }
 
     // Delete: api/certifications//id
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCertification(int id)
     {
@@ -59,12 +63,25 @@ public class CertificationsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> PutCertification(int id, Certification cert)
     {
         if (id != cert.Id) return BadRequest("ID does not match cert ID");
 
         _context.Entry(cert).State = EntityState.Modified;
+
+        // Recalc status for all employees have this cert
+        var employeesCerts = await _context.EmployeeCertifications
+            .Where(ec => ec.CertificationId == id)
+            .Include(ec => ec.Certification)
+            .ToListAsync();
+
+        foreach (var ec in employeesCerts)
+        {
+            _certificationService.UpdateStatus(ec);
+        }
+
         await _context.SaveChangesAsync();
 
         return NoContent();

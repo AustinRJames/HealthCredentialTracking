@@ -29,6 +29,10 @@ export class AdminDashboardComponent {
 
   onEmployeeUpdated(): void {
     this.certAssignRef.loadData();
-}
+  }
+
+  onCertUpdated(): void {
+    this.certAssignRef.loadData();
+  }
 
 }

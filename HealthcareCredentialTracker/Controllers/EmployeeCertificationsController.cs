@@ -36,6 +36,15 @@ public class EmployeeCertificationController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<EmployeeCertification>> PostEmployeeCertification(EmployeeCertification employeeCertification)
     {
+        var certification = await _context.Certifications.FindAsync(employeeCertification.CertificationId);
+        if (certification == null) return BadRequest("Certification not found");
+
+        employeeCertification.ExpirationDate = employeeCertification.DateCompleted
+            .AddMonths(certification.ValidityPeriodMonth);
+
+        // Run cert check service
+        _certService.UpdateStatus(employeeCertification);
+
         // Run cert check service
         _certService.UpdateStatus(employeeCertification);
 

@@ -3,9 +3,13 @@
 
     <app-employee-manager
      (employeeDeleted)="onEmployeeDeleted()"
-     (employeeUpdated)="onEmployeeUpdated()"></app-employee-manager>
+     (employeeUpdated)="onEmployeeUpdated()">
+    </app-employee-manager>
 
-    <app-certification-manager (certificationDeleted)="onCertificationDeleted()"></app-certification-manager>
+    <app-certification-manager
+     (certificationDeleted)="onCertificationDeleted()"
+     (certificationUpdated)="onCertUpdated()">
+    </app-certification-manager>
 
     <app-certification-assignment #certAssignRef></app-certification-assignment>
 

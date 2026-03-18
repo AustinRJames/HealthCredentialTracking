@@ -50,14 +50,11 @@ export class CertificationAssignmentComponent implements OnInit {
     }
 
     const completedDate = new Date(this.newAssignment.dateCompleted);
-    const expirationDate = new Date(completedDate);
-    expirationDate.setMonth(expirationDate.getMonth() + selectedCert.validityPeriodMonth);
 
     const payload = {
       employeeId: Number(this.newAssignment.employeeId),
       certificationId: Number(this.newAssignment.certificationId),
       dateCompleted: completedDate.toISOString(),
-      expirationDate: expirationDate.toISOString(),
       status: 0
     };
 
