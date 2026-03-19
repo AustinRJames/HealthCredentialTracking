@@ -52,11 +52,13 @@ public class UserController : ControllerBase
 
         var user = await _context.Users
             .Include(u => u.Employee)
-                .Include(e => e!.EmployeeCertifications)
+                .ThenInclude(e => e!.EmployeeCertifications)
                     .ThenInclude(ec => ec.Certification)
             .Include(u => u.Employee)
                 .ThenInclude(e=> e!.Department)
             .FirstOrDefaultAsync(u => u.Username == username);
+
+        if (user == null || user.Employee == null) return NotFound();
 
         var emp = user.Employee;
 

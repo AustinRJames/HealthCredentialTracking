@@ -21,7 +21,13 @@ export class Login {
       next: (response) => {
         this.authService.setToken(response.token);
         this.errorMessage = '';
-        this.router.navigate(['/admin']);
+
+        const role = this.authService.getRoleFromToken();
+        if (role === 'Admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/employee']);
+        }
       },
       error: () => {
         this.errorMessage = 'Invalid username or password';

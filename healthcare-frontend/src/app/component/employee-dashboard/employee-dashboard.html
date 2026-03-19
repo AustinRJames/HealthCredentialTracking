@@ -1,0 +1,26 @@
+<div>
+    <h1>Welcome {{ employeeData()?.firstName }} {{ employeeData()?.lastName }}</h1>
+    <h3>{{ employeeData()?.role }} | {{ employeeData()?.departmentName }}</h3>
+
+    <div style="padding: 15px; border-radius: 5px;">
+        <h3>Certifications</h3>
+        <table borders="1" cellPadding="10">
+            <tr style="background: #f2f2f2">
+                <th>Name</th>
+                <th>Expiration Date</th>
+                <th>Status</th>
+            </tr>
+            @for (cert of employeeData()?.certifications; track cert.name) {
+                <tr>
+                    <td>{{ cert.name }}</td>
+                    <td>{{ cert.expirationDate | date }}</td>
+                    <td>{{ cert.status }}</td>
+                </tr>
+            } @empty {
+                <tr>
+                    <td colspan="3">No certifications yet. Use the form above to add one!</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

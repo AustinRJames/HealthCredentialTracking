@@ -14,4 +14,8 @@ export class UserService {
     registerUser(email: string, username: string, password: string): Observable<any> {
         return this.http.post(`${this.baseUrl}/User`, { email, username, password });
     }
+
+    getMe(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/User/me`);
+    }
 }
