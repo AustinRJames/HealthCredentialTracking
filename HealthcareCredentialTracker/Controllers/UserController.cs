@@ -56,6 +56,8 @@ public class UserController : ControllerBase
                     .ThenInclude(ec => ec.Certification)
             .Include(u => u.Employee)
                 .ThenInclude(e=> e!.Department)
+                    .ThenInclude(d => d!.RequiredCertifications)
+                        .ThenInclude(dc => dc.Certification)
             .FirstOrDefaultAsync(u => u.Username == username);
 
         if (user == null || user.Employee == null) return NotFound();
@@ -75,6 +77,10 @@ public class UserController : ControllerBase
                 ec.DateCompleted,
                 ec.ExpirationDate,
                 ec.Status
+            }).ToList(),
+            RequiredCertifications = emp.Department?.RequiredCertifications.Select(dc => new
+            {
+                dc.Certification!.Name
             }).ToList()
         });
     }

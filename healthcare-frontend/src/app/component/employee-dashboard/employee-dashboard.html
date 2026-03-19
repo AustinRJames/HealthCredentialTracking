@@ -3,7 +3,21 @@
     <h3>{{ employeeData()?.role }} | {{ employeeData()?.departmentName }}</h3>
 
     <div style="padding: 15px; border-radius: 5px;">
-        <h3>Certifications</h3>
+        <h3>Required Department Certifications</h3>
+        <table borders="1" cellPadding="10">
+            <tr style="background-color: #f2f2f2;">
+                <th>Name</th>
+            </tr>
+            @for (cert of employeeData()?.requiredCertifications; track cert.name) {
+                <tr>
+                    <td>{{ cert.name }}</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div style="padding: 15px; border-radius: 5px;">
+        <h3>My Certifications</h3>
         <table borders="1" cellPadding="10">
             <tr style="background: #f2f2f2">
                 <th>Name</th>
@@ -23,4 +37,4 @@
             }
         </table>
     </div>
-</div>
+</div> 
